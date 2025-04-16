@@ -1,17 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-    <style>
-        /* This is an example - you'd need to find the actual selector */
-        .elevenlabs-branding-text,
-        .el-convai-powered-by,
-        [data-elevenlabs-branding] {
-          display: none !important;
-        }
-      </style>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Universai.ai conversatinal chat bot Site</title>
+    <style>
+        /* Hide branding text */
+        .elevenlabs-branding-text,
+        .el-convai-powered-by,
+        [data-elevenlabs-branding] {
+            display: none !important;
+        }
+        
+        /* Set background and text colors to white */
+        #elevenlabs-widget-container,
+        #elevenlabs-widget-container * {
+            background-color: white !important;
+            color: white !important;
+        }
+        
+        /* Make links white too */
+        #elevenlabs-widget-container a,
+        #elevenlabs-widget-container a:visited,
+        #elevenlabs-widget-container a:hover,
+        #elevenlabs-widget-container a:active {
+            color: white !important;
+        }
+        
+        /* Ensure borders, icons, and other elements are also white */
+        #elevenlabs-widget-container svg,
+        #elevenlabs-widget-container img,
+        #elevenlabs-widget-container button,
+        #elevenlabs-widget-container input,
+        #elevenlabs-widget-container textarea {
+            border-color: white !important;
+            fill: white !important;
+            stroke: white !important;
+        }
+    </style>
 </head>
 <body>
     <div id="elevenlabs-widget-container">
@@ -20,13 +46,3 @@
     <script src="https://elevenlabs.io/convai-widget/index.js" async type="text/javascript"></script>
 </body>
 </html>
-<style>
-    /* This is an example - you'd need to find the actual selector */
-    .elevenlabs-branding-text,
-    .el-convai-powered-by,
-    [data-elevenlabs-branding] {
-      display: none !important;
-    }
-</style>
-<!--https://maximilianolucius.github.io/univerai_conv_bot/ -->
-
