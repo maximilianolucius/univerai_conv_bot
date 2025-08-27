@@ -1,176 +1,4 @@
-  <div class="app">
-    <aside class="left">
-      <h1>Preguntas en vivo</h1>
-      <div class="muted">VerÃ¡s aquÃ­ cada pregunta que el agente formula en el momento en que la va a pronunciar.</div>
-
-      <div class="row">
-        <div class="small">SesiÃ³n:</div>
-        <div class="pill mono" id="session-pill">â</div>
-      </div>
-
-      <div class="status" id="status-pill">
-        <span>â³ Esperando inicio de llamadaâ¦</span>
-      </div>
-
-      <div class="feed" id="questions-feed"></div>
-    </aside>
-
-    <main class="right">
-      <div class="widget-shell">
-        <!-- Widget ElevenLabs -->
-        <elevenlabs-convai
-          id="convai"
-          agent-id="TU_AGENT_ID"
-          variant="expanded"
-          override-language="es"
-          dynamic-variables='{"session_id":"PENDING"}'>
-        </elevenlabs-convai>
-      </div>
-    </main>
-  </div>
-
-  <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
-  <script>
-    // ======= Utilidades simples =======
-    const SESSION_ID = (self.crypto?.randomUUID?.() || String(Math.random()).slice(2));
-    const $ = (sel) => document.querySelector(sel);
-    const feedEl = $("#questions-feed");
-    const sessionPill = $("#session-pill");
-    const statusPill = $("#status-pill");
-    const widget = $("#convai");
-
-    function nowIso() { return new Date().toISOString(); }
-
-    function renderQuestion({ question_id, question_text, ts }) {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `
-        <div class="qid">ID: ${escapeHtml(question_id)}</div>
-        <div class="qtext">${escapeHtml(question_text)}</div>
-        <div class="ts">${new Date(ts).toLocaleString()}</div>
-      `;
-      feedEl.appendChild(card);
-      feedEl.scrollTop = feedEl.scrollHeight;
-    }
-
-    function escapeHtml(s) {
-      return String(s).replace(/[&<>"']/g, (c) => ({
-        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
-      }[c]));
-    }
-
-    // ======= Al cargar, fija la session_id dinÃ¡mica en el widget =======
-    document.addEventListener("DOMContentLoaded", () => {
-      sessionPill.textContent = SESSION_ID;
-      widget.setAttribute("dynamic-variables", JSON.stringify({ session_id: SESSION_ID }));
-
-      // Cuando el widget inicia la llamada, se puede registrar Client Tools
-      widget.addEventListener("elevenlabs-convai:call", (event) => {
-        statusPill.innerHTML = "â Llamada iniciada. Escuchando preguntasâ¦";
-
-        // Registramos tools para que el agente pueda "avisar" las preguntas
-        event.detail.config.clientTools = {
-          displayQuestion: async ({ question_id, question_text }) => {
-            const ts = nowIso();
-            renderQuestion({ question_id, question_text, ts });
-            // Respuesta al agente (por si marcaste "Wait for response")
-            return { ok: true, ts };
-          }
-        };
-      });
-
-      // (Opcional) Si el widget emite un evento de finalizaciÃ³n, puedes actualizar estado UI:
-      widget.addEventListener("elevenlabs-convai:end", () => {
-        statusPill.innerHTML = "â¹ï¸ Llamada finalizada.";
-      });
-    });
-  </script>  <div class="app">
-    <aside class="left">
-      <h1>Preguntas en vivo</h1>
-      <div class="muted">VerÃ¡s aquÃ­ cada pregunta que el agente formula en el momento en que la va a pronunciar.</div>
-
-      <div class="row">
-        <div class="small">SesiÃ³n:</div>
-        <div class="pill mono" id="session-pill">â</div>
-      </div>
-
-      <div class="status" id="status-pill">
-        <span>â³ Esperando inicio de llamadaâ¦</span>
-      </div>
-
-      <div class="feed" id="questions-feed"></div>
-    </aside>
-
-    <main class="right">
-      <div class="widget-shell">
-        <!-- Widget ElevenLabs -->
-        <elevenlabs-convai
-          id="convai"
-          agent-id="TU_AGENT_ID"
-          variant="expanded"
-          override-language="es"
-          dynamic-variables='{"session_id":"PENDING"}'>
-        </elevenlabs-convai>
-      </div>
-    </main>
-  </div>
-
-  <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
-  <script>
-    // ======= Utilidades simples =======
-    const SESSION_ID = (self.crypto?.randomUUID?.() || String(Math.random()).slice(2));
-    const $ = (sel) => document.querySelector(sel);
-    const feedEl = $("#questions-feed");
-    const sessionPill = $("#session-pill");
-    const statusPill = $("#status-pill");
-    const widget = $("#convai");
-
-    function nowIso() { return new Date().toISOString(); }
-
-    function renderQuestion({ question_id, question_text, ts }) {
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `
-        <div class="qid">ID: ${escapeHtml(question_id)}</div>
-        <div class="qtext">${escapeHtml(question_text)}</div>
-        <div class="ts">${new Date(ts).toLocaleString()}</div>
-      `;
-      feedEl.appendChild(card);
-      feedEl.scrollTop = feedEl.scrollHeight;
-    }
-
-    function escapeHtml(s) {
-      return String(s).replace(/[&<>"']/g, (c) => ({
-        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
-      }[c]));
-    }
-
-    // ======= Al cargar, fija la session_id dinÃ¡mica en el widget =======
-    document.addEventListener("DOMContentLoaded", () => {
-      sessionPill.textContent = SESSION_ID;
-      widget.setAttribute("dynamic-variables", JSON.stringify({ session_id: SESSION_ID }));
-
-      // Cuando el widget inicia la llamada, se puede registrar Client Tools
-      widget.addEventListener("elevenlabs-convai:call", (event) => {
-        statusPill.innerHTML = "â Llamada iniciada. Escuchando preguntasâ¦";
-
-        // Registramos tools para que el agente pueda "avisar" las preguntas
-        event.detail.config.clientTools = {
-          displayQuestion: async ({ question_id, question_text }) => {
-            const ts = nowIso();
-            renderQuestion({ question_id, question_text, ts });
-            // Respuesta al agente (por si marcaste "Wait for response")
-            return { ok: true, ts };
-          }
-        };
-      });
-
-      // (Opcional) Si el widget emite un evento de finalizaciÃ³n, puedes actualizar estado UI:
-      widget.addEventListener("elevenlabs-convai:end", () => {
-        statusPill.innerHTML = "â¹ï¸ Llamada finalizada.";
-      });
-    });
-  </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
@@ -244,7 +72,7 @@
         <!-- Widget ElevenLabs -->
         <elevenlabs-convai
           id="convai"
-          agent-id="TU_AGENT_ID"
+          agent-id="agent_2701k3nv9en2fqcavhpdmfgbew5b"
           variant="expanded"
           override-language="es"
           dynamic-variables='{"session_id":"PENDING"}'>
@@ -253,7 +81,6 @@
     </main>
   </div>
 
-  <script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
   <script>
     // ======= Utilidades simples =======
     const SESSION_ID = (self.crypto?.randomUUID?.() || String(Math.random()).slice(2));
